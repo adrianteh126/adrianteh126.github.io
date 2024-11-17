@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Fix for modal layout shift & white stripe, see https://github.com/saadeghi/daisyui/issues/2990 */
+  :root:has(
+      :is(
+          .modal-open,
+          .modal:target,
+          .modal-toggle:checked + .modal,
+          .modal[open]
+        )
+    ) {
+    scrollbar-gutter: revert !important;
+  }
+
+  /* Fix for dialog scrollbar gutter, see https://github.com/saadeghi/daisyui/issues/2859 */
+  html {
+    @apply scroll-smooth;
+    scrollbar-gutter: auto !important;
+  }
+  html:has(body.content-overflow-y) {
+    scrollbar-gutter: stable !important;
+  }
+}
