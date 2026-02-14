@@ -5,13 +5,13 @@
 @layer base {
   /* Fix for modal layout shift & white stripe, see https://github.com/saadeghi/daisyui/issues/2990 */
   :root:has(
-      :is(
-          .modal-open,
-          .modal:target,
-          .modal-toggle:checked + .modal,
-          .modal[open]
-        )
-    ) {
+    :is(
+      .modal-open,
+      .modal:target,
+      .modal-toggle:checked + .modal,
+      .modal[open]
+    )
+  ) {
     scrollbar-gutter: revert !important;
   }
 
@@ -22,5 +22,12 @@
   }
   html:has(body.content-overflow-y) {
     scrollbar-gutter: stable !important;
+  }
+
+  /* Custom utility class for hover transition on primary color */
+  .hover-transition-primary:hover {
+    @apply text-primary;
+    @apply transition-colors;
+    @apply duration-300;
   }
 }

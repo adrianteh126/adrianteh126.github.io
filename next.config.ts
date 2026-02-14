@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import createMDX from "@next/mdx";
 
 const env = process.env.ENV ?? "production";
 console.log("process.env.ENV", process.env.ENV, typeof process.env.ENV);
@@ -12,6 +13,15 @@ const nextConfig: NextConfig = {
   },
   basePath: env === "production" ? "/adrianteh126.github.io" : "",
   output: "export",
+  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 };
 
-export default nextConfig;
+const withMDX = createMDX({
+  extension: /\.(md|mdx)$/,
+  options: {
+    remarkPlugins: ["remark-gfm"],
+  },
+  // Add markdown plugins here, as desired
+});
+
+export default withMDX(nextConfig);
