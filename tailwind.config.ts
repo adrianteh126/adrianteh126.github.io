@@ -15,13 +15,13 @@ export default {
         foreground: "var(--foreground)",
       },
       fontSize: {
-        base: "16px",
-        lg: "18px",
-        xl: "20px",
-        "2xl": "24px",
-        "3xl": "30px",
-        "4xl": "36px",
-        "5xl": "48px",
+        base: ["clamp(14px, 2.5vw, 16px)", { lineHeight: "1.6" }],
+        lg: ["clamp(16px, 3vw, 18px)", { lineHeight: "1.6" }],
+        xl: ["clamp(17px, 3.5vw, 20px)", { lineHeight: "1.5" }],
+        "2xl": ["clamp(20px, 4vw, 24px)", { lineHeight: "1.4" }],
+        "3xl": ["clamp(24px, 5vw, 30px)", { lineHeight: "1.3" }],
+        "4xl": ["clamp(28px, 6vw, 36px)", { lineHeight: "1.2" }],
+        "5xl": ["clamp(32px, 7vw, 48px)", { lineHeight: "1.1" }],
       },
     },
   },
@@ -35,18 +35,18 @@ export default {
         h5: { fontSize: theme("fontSize.xl") },
         h6: { fontSize: theme("fontSize.lg") },
         p: { fontSize: theme("fontSize.base") },
-      }),
-        addUtilities({
-          /* Hide scrollbar for Chrome, Safari and Opera */
-          ".no-scrollbar::-webkit-scrollbar": {
-            display: "none",
-          },
-          /* Hide scrollbar for IE, Edge and Firefox */
-          ".no-scrollbar": {
-            "-ms-overflow-style": "none" /* IE and Edge */,
-            "scrollbar-width": "none" /* Firefox */,
-          },
-        });
+      });
+      addUtilities({
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        ".no-scrollbar::-webkit-scrollbar": {
+          display: "none",
+        },
+        /* Hide scrollbar for IE, Edge and Firefox */
+        ".no-scrollbar": {
+          "-ms-overflow-style": "none" /* IE and Edge */,
+          "scrollbar-width": "none" /* Firefox */,
+        },
+      });
     }),
     daisyui,
   ],
