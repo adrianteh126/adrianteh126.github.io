@@ -35,7 +35,7 @@ export function getAllPosts(): BlogPost[] {
         /export\s+const\s+metadata\s*=\s*\{([\s\S]+?)\};/,
       );
 
-      let metadata: Record<string, string> = {};
+      const metadata: Record<string, string> = {};
 
       if (metadataMatch) {
         const metadataContent = metadataMatch[1];

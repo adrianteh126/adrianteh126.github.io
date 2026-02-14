@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
   },
   basePath: env === "production" ? "/adrianteh126.github.io" : "",
   output: "export",
+  trailingSlash: true,
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 };
 
