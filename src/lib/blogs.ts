@@ -1,3 +1,4 @@
+import { log } from "console";
 import fs from "fs";
 import path from "path";
 
@@ -20,9 +21,9 @@ export function getAllPosts(): BlogPost[] {
     .filter((entry) => entry.isDirectory())
     .map((entry) => {
       const slug = entry.name;
-      const mdxPath = path.join(postsDirectory, slug, "page.mdx");
+      const mdxPath = path.join(postsDirectory, `${slug}/page.mdx`);
 
-      // Check if page.mdx exists
+      // Check if mdx file exists
       if (!fs.existsSync(mdxPath)) {
         return null;
       }

@@ -53,7 +53,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn(futura.className)} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={cn(futura.className)}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <head />
       <body>{children}</body>
     </html>
