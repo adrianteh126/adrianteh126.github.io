@@ -20,6 +20,9 @@ const nextConfig: NextConfig = {
   // Use "export" output to enable static export of the site
   output: "export",
 
+  // Add trailing slash to generate index.html in subdirectories for GitHub Pages compatibility
+  trailingSlash: true,
+
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 };
 
