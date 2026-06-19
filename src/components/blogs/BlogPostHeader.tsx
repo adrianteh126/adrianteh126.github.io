@@ -3,11 +3,13 @@ interface BlogPostHeaderProps {
   date?: string;
   author?: string;
   tags?: string[];
+  description?: string;
   metadata?: {
     title: string;
     date: string;
     author: string;
     tags: string[];
+    description: string;
   };
 }
 
@@ -17,6 +19,7 @@ export function BlogPostHeader(props: BlogPostHeaderProps) {
   const date = props.metadata?.date || props.date || "";
   const author = props.metadata?.author || props.author || "";
   const tags = props.metadata?.tags || props.tags || [];
+  const description = props.metadata?.description || props.description || "";
 
   return (
     <div className="mb-8">
@@ -34,6 +37,9 @@ export function BlogPostHeader(props: BlogPostHeaderProps) {
           })}
         </div>
       </div>
+      {description && (
+        <p className="mt-3 text-lg text-slate-600">{description}</p>
+      )}
       <div className="mt-4 flex flex-wrap gap-2">
         {tags.map((t) => (
           <span key={t} className="badge badge-primary badge-sm uppercase">

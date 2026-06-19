@@ -15,7 +15,7 @@ const PostMetaSchema = z.object({
     .refine((d) => !Number.isNaN(Date.parse(d)), "date is not a valid calendar date"),
   description: z.string().min(1),
   tags: z.array(z.string().min(1)).min(1),
-  author: z.string().min(1).default("Adrian Teh"),
+  author: z.string().min(1)
 });
 
 export type PostMeta = z.infer<typeof PostMetaSchema>;
@@ -32,9 +32,9 @@ export function getAllPosts(): BlogPost[] {
     .filter((entry) => entry.isDirectory())
     .map((entry) => {
       const slug = entry.name;
-      const mdxPath = path.join(postsDirectory, slug, "page.mdx");
+      const mdxPath = path.join(postsDirectory, slug, "content.mdx");
 
-      // Check if mdx file exists
+      // Check if mdx file exists (skips e.g. the [slug] route directory)
       if (!fs.existsSync(mdxPath)) {
         return null;
       }
@@ -45,7 +45,7 @@ export function getAllPosts(): BlogPost[] {
       const parsed = PostMetaSchema.safeParse(data);
       if (!parsed.success) {
         throw new Error(
-          `Invalid frontmatter in ${slug}/page.mdx: ${parsed.error.message}`,
+          `Invalid frontmatter in ${slug}/content.mdx: ${parsed.error.message}`,
         );
       }
 
@@ -60,8 +60,7 @@ export function getAllPosts(): BlogPost[] {
 }
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
-  const posts = getAllPosts();
-  return posts.find((post) => post.slug === slug);
+  return getAllPosts().find((post) => post.slug === slug);
 }
 
 export function getRecentPosts(count: number = 3): BlogPost[] {
