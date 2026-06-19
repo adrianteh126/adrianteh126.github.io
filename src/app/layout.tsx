@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   description:
     "Software Engineer, Web Developer, and Designer. I build things for the web.",
   icons:
-    "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>",
+    "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧑‍💻</text></svg>",
   robots: {
     follow: true,
     index: true,
