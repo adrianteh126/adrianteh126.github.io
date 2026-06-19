@@ -12,9 +12,10 @@ import {
 
 import "@/styles/globals.css";
 
-// Privacy-friendly analytics (Plausible). Gated on env so it never loads in
-// `pnpm dev` — set NEXT_PUBLIC_PLAUSIBLE_DOMAIN in the production build only.
-const plausibleDomain = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN;
+// Privacy-friendly analytics (Cloudflare Web Analytics). Gated on env so it
+// never loads in `pnpm dev` — set NEXT_PUBLIC_CF_ANALYTICS_TOKEN (the beacon
+// token from the CF dashboard) in the production build only.
+const cfAnalyticsToken = process.env.NEXT_PUBLIC_CF_ANALYTICS_TOKEN;
 
 // Google Search Console verification token (optional). Set NEXT_PUBLIC_GSC_TOKEN
 // after creating the property; the meta tag is emitted only when present.
@@ -105,11 +106,11 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {plausibleDomain && (
+        {cfAnalyticsToken && (
           <Script
             defer
-            data-domain={plausibleDomain}
-            src="https://plausible.io/js/script.js"
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon={`{"token": "${cfAnalyticsToken}"}`}
             strategy="afterInteractive"
           />
         )}
