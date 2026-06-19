@@ -120,7 +120,7 @@ export default function HomePage({ recentPosts, projects }: HomePageProps) {
         </div>
         <div className="min-w-[300px] flex-1">
           <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-primary">
-            Software Engineer
+            Backend Engineer
           </p>
           <h1 className="mb-5 text-[clamp(40px,8vw,60px)] font-extrabold leading-[0.96] tracking-tight text-base-content">
             Hi, I&apos;m
@@ -128,8 +128,8 @@ export default function HomePage({ recentPosts, projects }: HomePageProps) {
             Adrian Teh.
           </h1>
           <p className="max-w-[540px] text-lg leading-relaxed text-base-content/70">
-            A passionate software engineer graduate who enjoys traveling,
-            jogging, and solving real-world problems through code.
+            A passionate software engineer who enjoys traveling, jogging, and
+            solving real-world problems through code.
           </p>
         </div>
       </section>
