@@ -34,10 +34,6 @@ jobs:
       - name: Setup Pages ⚙️
         uses: actions/configure-pages@v5
 
-      # Clear any stale cached build output to ensure fresh build
-      - name: Clean Next.js cache 🧹
-        run: rm -rf .next/cache
-
       - name: Build with Next.js 🏗️
         run: pnpm build
 
