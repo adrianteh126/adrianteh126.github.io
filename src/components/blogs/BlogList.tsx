@@ -37,12 +37,12 @@ export function BlogList({ posts }: BlogListProps) {
               {post.description}
             </p>
             <div className="flex flex-wrap gap-2">
-              {post.tag.split(",").map((tag) => (
+              {post.tags.map((tag) => (
                 <span
-                  key={tag.trim()}
+                  key={tag}
                   className="badge badge-primary badge-sm uppercase"
                 >
-                  {tag.trim()}
+                  {tag}
                 </span>
               ))}
             </div>

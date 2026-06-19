@@ -1,16 +1,27 @@
-import { log } from "console";
 import fs from "fs";
 import path from "path";
+import matter from "gray-matter";
+import { z } from "zod";
 
 const postsDirectory = path.join(process.cwd(), "src/app/blogs");
 
-export interface BlogPost {
+// Frontmatter schema — validated at build time. A missing or malformed field
+// throws instead of silently degrading to an empty string.
+const PostMetaSchema = z.object({
+  title: z.string().min(1),
+  date: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "date must be ISO YYYY-MM-DD")
+    .refine((d) => !Number.isNaN(Date.parse(d)), "date is not a valid calendar date"),
+  description: z.string().min(1),
+  tags: z.array(z.string().min(1)).min(1),
+  author: z.string().min(1).default("Adrian Teh"),
+});
+
+export type PostMeta = z.infer<typeof PostMetaSchema>;
+
+export interface BlogPost extends PostMeta {
   slug: string;
-  title: string;
-  date: string;
-  description: string;
-  tag: string;
-  author: string;
   content: string;
 }
 
@@ -21,7 +32,7 @@ export function getAllPosts(): BlogPost[] {
     .filter((entry) => entry.isDirectory())
     .map((entry) => {
       const slug = entry.name;
-      const mdxPath = path.join(postsDirectory, `${slug}/page.mdx`);
+      const mdxPath = path.join(postsDirectory, slug, "page.mdx");
 
       // Check if mdx file exists
       if (!fs.existsSync(mdxPath)) {
@@ -29,64 +40,23 @@ export function getAllPosts(): BlogPost[] {
       }
 
       const fileContents = fs.readFileSync(mdxPath, "utf8");
+      const { data, content } = matter(fileContents);
 
-      // Extract metadata from "export const metadata = {...}" pattern
-      // Using [\s\S] instead of 's' flag for better compatibility
-      const metadataMatch = fileContents.match(
-        /export\s+const\s+metadata\s*=\s*\{([\s\S]+?)\};/,
-      );
-
-      const metadata: Record<string, string> = {};
-
-      if (metadataMatch) {
-        const metadataContent = metadataMatch[1];
-
-        // Parse title
-        const titleMatch = metadataContent.match(/title:\s*"([^"]+)"/);
-        if (titleMatch) metadata.title = titleMatch[1];
-
-        // Parse date
-        const dateMatch = metadataContent.match(/date:\s*"([^"]+)"/);
-        if (dateMatch) metadata.date = dateMatch[1];
-
-        // Parse description - handle multiline and apostrophes
-        // Match from description: to the next ",
-        const descriptionMatch = metadataContent.match(
-          /description:\s*"([\s\S]*?)"\s*,/,
+      const parsed = PostMetaSchema.safeParse(data);
+      if (!parsed.success) {
+        throw new Error(
+          `Invalid frontmatter in ${slug}/page.mdx: ${parsed.error.message}`,
         );
-        if (descriptionMatch) {
-          metadata.description = descriptionMatch[1]
-            .replace(/\n\s+/g, " ")
-            .trim();
-        }
-
-        // Parse tag
-        const tagMatch = metadataContent.match(/tag:\s*"([^"]+)"/);
-        if (tagMatch) metadata.tag = tagMatch[1];
-
-        // Parse author
-        const authorMatch = metadataContent.match(/author:\s*"([^"]+)"/);
-        if (authorMatch) metadata.author = authorMatch[1];
       }
 
-      return {
-        slug,
-        title: metadata.title || "",
-        date: metadata.date || "",
-        description: metadata.description || "",
-        tag: metadata.tag || "",
-        author: metadata.author || "",
-        content: fileContents,
-      };
+      return { slug, ...parsed.data, content };
     })
     .filter((post): post is BlogPost => post !== null);
 
-  // Sort posts by date
-  return allPostsData.sort((a, b) => {
-    const dateA = new Date(a.date);
-    const dateB = new Date(b.date);
-    return dateB.getTime() - dateA.getTime();
-  });
+  // Sort posts by date, newest first
+  return allPostsData.sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  );
 }
 
 export function getPostBySlug(slug: string): BlogPost | undefined {

@@ -2,12 +2,12 @@ interface BlogPostHeaderProps {
   title?: string;
   date?: string;
   author?: string;
-  tag?: string;
+  tags?: string[];
   metadata?: {
     title: string;
     date: string;
     author: string;
-    tag: string;
+    tags: string[];
   };
 }
 
@@ -16,7 +16,7 @@ export function BlogPostHeader(props: BlogPostHeaderProps) {
   const title = props.metadata?.title || props.title || "";
   const date = props.metadata?.date || props.date || "";
   const author = props.metadata?.author || props.author || "";
-  const tag = props.metadata?.tag || props.tag || "";
+  const tags = props.metadata?.tags || props.tags || [];
 
   return (
     <div className="mb-8">
@@ -35,12 +35,9 @@ export function BlogPostHeader(props: BlogPostHeaderProps) {
         </div>
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
-        {tag.split(",").map((t) => (
-          <span
-            key={t.trim()}
-            className="badge badge-primary badge-sm uppercase"
-          >
-            {t.trim()}
+        {tags.map((t) => (
+          <span key={t} className="badge badge-primary badge-sm uppercase">
+            {t}
           </span>
         ))}
       </div>
