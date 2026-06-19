@@ -29,7 +29,7 @@ interface HomePageProps {
 const EXPERIENCE = [
   {
     role: "Backend Engineer",
-    org: "Rytbank",
+    org: "Ryt Bank",
     period: "Mac 2025 - Present",
     current: true,
   },
@@ -39,7 +39,7 @@ const EXPERIENCE = [
     period: "Sep 2024 - Dec 2024 · Contract",
   },
   {
-    role: "Software Engineer Intern",
+    role: "Intern",
     org: "Fuxionex Group",
     period: "Aug 2023 - Jan 2024",
   },
