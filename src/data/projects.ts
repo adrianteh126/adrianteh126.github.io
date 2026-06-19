@@ -26,5 +26,6 @@ export const projects: Project[] = [
       "A Django app integrated with the Roboflow API to recommend suitable glasses based on the user's face shape.",
     tags: ["Django", "Roboflow", "Python"],
     githubUrl: "https://github.com/adrianteh126/detectify",
+    liveUrl: "https://detectify.onrender.com/",
   },
 ];
