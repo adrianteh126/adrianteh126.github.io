@@ -8,8 +8,8 @@ export function BlogLayoutHeader() {
   const isOnBlogPost = pathname !== "/blogs" && pathname.startsWith("/blogs/");
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-sm">
-      <div className="container mx-auto flex items-center gap-3 px-4 py-4">
+    <header className="sticky top-0 z-30 border-b border-base-300 bg-base-200/85 backdrop-blur-md">
+      <div className="mx-auto flex max-w-[1140px] items-center gap-3 px-7 py-3">
         <Link href="/" target="_self">
           <p className="transition-transform duration-300 ease-in-out hover:-translate-x-2 hover:text-secondary">
             ← Portfolio

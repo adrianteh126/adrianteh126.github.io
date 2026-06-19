@@ -1,276 +1,347 @@
 "use client";
 
+import Link from "next/link";
+import { motion } from "framer-motion";
+import type { BlogPost } from "@/lib/blogs";
+import type { Project } from "@/data/projects";
+import { TagPill } from "@/components/site/TagPill";
+import { ProjectCard } from "@/components/projects/ProjectCard";
+import { BlogCard } from "@/components/blogs/BlogCard";
 import {
   EntypoMail,
   EntypoSocialGithub,
   EntypoSocialLinkedin,
-  SkillIconsJavaLight,
-  SkillIconsPythonLight,
-  SkillIconsReactLight,
-  SkillIconsSpringLight,
-  SkillIconsTypescript,
-  SkillIconsVuejsLight,
 } from "@/components/icon";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { useState } from "react";
-import type { BlogPost } from "@/lib/blogs";
-import { fadeInOutVariant, hoverVariants } from "@/animations/variants";
+import {
+  cardHoverVariant,
+  fadeInOutVariant,
+  linkHoverVariant,
+} from "@/animations/variants";
+import { useHoverEnabled } from "@/hooks/useHoverEnabled";
+
+export type RecentPost = BlogPost & { cover: string | null };
 
 interface HomePageProps {
-  recentPosts: BlogPost[];
+  recentPosts: RecentPost[];
+  projects: Project[];
 }
 
-export default function HomePage({ recentPosts }: HomePageProps) {
-  // Detect if device supports hover (not touch-only) - initialized lazily
-  const [isHoverEnabled] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.matchMedia("(hover: hover)").matches;
-  });
+const EXPERIENCE = [
+  {
+    role: "Backend Engineer",
+    org: "Rytbank",
+    period: "Mac 2025 - Present",
+    current: true,
+  },
+  {
+    role: "Software Developer",
+    org: "AppFuxion Consulting",
+    period: "Sep 2024 - Dec 2024 · Contract",
+  },
+  {
+    role: "Software Engineer Intern",
+    org: "Fuxionex Group",
+    period: "Aug 2023 - Jan 2024",
+  },
+];
+
+const SKILLS = [
+  { group: "Languages", items: ["TypeScript", "Java", "Python"] },
+  { group: "Frameworks", items: ["React.js", "Vue.js", "Spring Boot"] },
+];
+
+const CONTACTS = [
+  {
+    Icon: EntypoMail,
+    label: "adrianteh02@hotmail.com",
+    href: "mailto:adrianteh02@hotmail.com",
+    external: false,
+  },
+  {
+    Icon: EntypoSocialLinkedin,
+    label: "Adrian Teh",
+    href: "https://www.linkedin.com/in/adrian-teh-kuan-kiat",
+    external: true,
+  },
+  {
+    Icon: EntypoSocialGithub,
+    label: "adrianteh126",
+    href: "https://github.com/adrianteh126",
+    external: true,
+  },
+];
+
+function CardLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="mb-4 border-b border-base-300 pb-3 text-xs font-bold uppercase tracking-[0.16em] text-base-content/50">
+      {children}
+    </p>
+  );
+}
+
+/** Internal "→" link with a Framer Motion nudge + pink hover. */
+function ViewAllLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  const isHoverEnabled = useHoverEnabled();
+  return (
+    <Link
+      href={href}
+      className="whitespace-nowrap text-sm font-normal text-primary transition-colors hover:text-secondary"
+    >
+      <motion.span
+        className="inline-block"
+        whileHover={isHoverEnabled ? linkHoverVariant : undefined}
+      >
+        {children}
+      </motion.span>
+    </Link>
+  );
+}
+
+export default function HomePage({ recentPosts, projects }: HomePageProps) {
+  const isHoverEnabled = useHoverEnabled();
+  const featured = recentPosts[0];
+  const rest = recentPosts.slice(1);
 
   return (
-    <>
-      <div className="grid min-h-screen grid-flow-dense grid-cols-2 grid-rows-12 gap-3 bg-gradient-to-br from-slate-50 to-slate-100 p-4 *:rounded-lg *:px-6 *:py-4 sm:grid-cols-6 sm:gap-3 sm:p-6 lg:grid-cols-12 lg:gap-4 lg:p-8">
-        {/* About Me */}
+    <main className="mx-auto max-w-[1140px] px-7 pb-16 pt-12">
+      {/* Hero */}
+      <section
+        id="home"
+        className="flex flex-wrap items-center gap-12 border-b border-base-300 pb-12"
+      >
+        <div className="flex h-[150px] w-[150px] items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-[78px]">
+          🧑‍💻
+        </div>
+        <div className="min-w-[300px] flex-1">
+          <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-primary">
+            Software Engineer
+          </p>
+          <h1 className="mb-5 text-[clamp(40px,8vw,60px)] font-extrabold leading-[0.96] tracking-tight text-base-content">
+            Hi, I&apos;m
+            <br />
+            Adrian Teh.
+          </h1>
+          <p className="max-w-[540px] text-lg leading-relaxed text-base-content/70">
+            A passionate software engineer graduate who enjoys traveling,
+            jogging, and solving real-world problems through code.
+          </p>
+        </div>
+      </section>
+
+      {/* Info cards */}
+      <div className="mt-12 grid grid-cols-1 gap-[18px] md:grid-cols-3">
+        {/* Experience */}
         <motion.div
-          className="col-span-2 row-span-4 bg-slate-300/70 shadow-md backdrop-blur-md sm:col-span-6 lg:col-span-4"
+          className="rounded-2xl border border-base-300 bg-base-100 p-6 transition-colors hover:border-base-content/20"
           variants={fadeInOutVariant}
           initial="hidden"
           animate="visible"
           transition={{ duration: 0.5, delay: 0 }}
-          whileHover={isHoverEnabled ? hoverVariants : undefined}
+          whileHover={isHoverEnabled ? cardHoverVariant : undefined}
         >
-          <h2 className="font-bold">Hi , I&apos;m Adrian Teh! 🙋‍♂️</h2>
-          <br />
-          <p>
-            A passionate software engineer graduate who enjoys traveling,
-            jogging, and solving real-world problems through code.
-          </p>
-        </motion.div>
-
-        {/* Education */}
-        <motion.div
-          className="col-span-2 row-span-3 bg-blue-300/70 shadow-md backdrop-blur-md sm:col-span-3 lg:col-span-4"
-          variants={fadeInOutVariant}
-          initial="hidden"
-          animate="visible"
-          transition={{ duration: 0.5, delay: 0.1 }}
-          whileHover={isHoverEnabled ? hoverVariants : undefined}
-        >
-          <h2 className="font-bold">Education</h2>
-          <ul>
-            <li>
-              <span className="font-semibold">
-                University of Malaya, Malaysia
-              </span>{" "}
-              - B.CS. (Software Engineering)
-            </li>
-          </ul>
-        </motion.div>
-
-        {/* Projects */}
-        <motion.div
-          className="col-span-2 row-span-7 flex flex-col justify-between bg-purple-300/70 shadow-md backdrop-blur-md sm:col-span-6 lg:col-span-4"
-          variants={fadeInOutVariant}
-          initial="hidden"
-          animate="visible"
-          transition={{ duration: 0.5, delay: 0.2 }}
-          whileHover={isHoverEnabled ? hoverVariants : undefined}
-        >
-          <h2 className="font-bold">Projects</h2>
-          <div className="flex flex-col gap-4 text-sm sm:text-base">
-            <div>
-              <strong>E-commerce Store for Upcycled Products</strong>
-              <br />A Next.js e-commerce platform collaborated with{" "}
-              <Link
-                href="https://www.instagram.com/klothcircularity"
-                target="_blank"
-                className="text-primary"
-              >
-                Kloth Circularity
-              </Link>{" "}
-              for upcycled products
+          <CardLabel>Experience</CardLabel>
+          {EXPERIENCE.map((job, i) => (
+            <div key={job.org} className="flex gap-3.5">
+              <div className="flex flex-col items-center pt-1.5">
+                <span
+                  className={`h-2.5 w-2.5 rounded-full ${
+                    job.current ? "bg-primary" : "bg-base-300"
+                  }`}
+                />
+                {i < EXPERIENCE.length - 1 && (
+                  <span className="mt-1.5 w-px flex-1 bg-base-300" />
+                )}
+              </div>
+              <div className="pb-4">
+                <p className="text-[15px] font-bold text-base-content">
+                  {job.role}
+                </p>
+                <p className="text-sm text-base-content/60">{job.org}</p>
+                <p className="text-xs text-base-content/40">{job.period}</p>
+              </div>
             </div>
-            <div>
-              <strong>Eco Quest</strong>
-              <br /> A Unity 2D RPG-like interactive quiz game to raise
-              environmental awareness topics. Built in C# exported to Android
-              Application
-            </div>
-            <div>
-              <strong>Detectify</strong>
-              <br /> Django application integrate with roboflow api to find
-              suitable glassess based on face shape
-            </div>
-          </div>
-
-          <Link href="/projects" target="_self">
-            <div className="tooltip" data-tip="More Projects">
-              <h2 className="font-bold transition-transform duration-300 ease-in-out hover:translate-x-2">
-                →
-              </h2>
-            </div>
-          </Link>
-        </motion.div>
-
-        {/* Contact */}
-        <motion.div
-          className="col-span-2 row-span-4 bg-green-300/70 shadow-md backdrop-blur-md sm:col-span-3 lg:col-span-4"
-          variants={fadeInOutVariant}
-          initial="hidden"
-          animate="visible"
-          transition={{ duration: 0.5, delay: 0.3 }}
-          whileHover={isHoverEnabled ? hoverVariants : undefined}
-        >
-          <h2 className="font-bold">Contact</h2>
-          <br />
-          <div className="*:hover-transition-primary flex flex-col gap-2 *:flex *:items-center *:gap-2">
-            <Link href="mailto:adrianteh02@hotmail.com">
-              <EntypoMail />
-              <span className="break-all sm:break-normal">
-                adrianteh02@hotmail.com
-              </span>
-            </Link>
-            <Link
-              href="https://www.linkedin.com/in/adrian-teh-kuan-kiat"
-              target="_blank"
-            >
-              <EntypoSocialLinkedin />
-              <span>Adrian Teh</span>
-            </Link>
-            <Link href="https://github.com/adrianteh126" target="_blank">
-              <EntypoSocialGithub />
-              <span>adrianteh126</span>
-            </Link>
-          </div>
+          ))}
         </motion.div>
 
         {/* Skills */}
         <motion.div
-          className="col-span-2 row-span-3 bg-orange-300/70 shadow-md backdrop-blur-md sm:col-span-6 lg:col-span-4"
+          className="rounded-2xl border border-base-300 bg-base-100 p-6 transition-colors hover:border-base-content/20"
           variants={fadeInOutVariant}
           initial="hidden"
           animate="visible"
-          transition={{ duration: 0.5, delay: 0.4 }}
-          whileHover={isHoverEnabled ? hoverVariants : undefined}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          whileHover={isHoverEnabled ? cardHoverVariant : undefined}
         >
-          <h2 className="font-bold">Skills</h2>
-
-          <div className="flex flex-col gap-2 text-sm *:flex *:flex-wrap *:gap-2 sm:text-base">
-            <div className="*:flex *:items-center *:gap-2">
-              <span className="font-semibold">Language </span>
-              <span>
-                <SkillIconsTypescript />
-                TypeScript
-              </span>
-              <span>
-                <SkillIconsJavaLight />
-                Java
-              </span>
-              <span>
-                <SkillIconsPythonLight />
-                Python
-              </span>
-            </div>
-            <div className="*:flex *:items-center *:gap-2">
-              <span className="font-semibold"> Framework </span>
-
-              <span>
-                <SkillIconsReactLight />
-                React.js
-              </span>
-              <span>
-                <SkillIconsVuejsLight />
-                Vue.js
-              </span>
-              <span>
-                <SkillIconsSpringLight />
-                Spring Boot
-              </span>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Experience */}
-        <motion.div
-          className="col-span-2 row-span-6 bg-teal-300/70 shadow-md backdrop-blur-md sm:col-span-3 lg:col-span-3"
-          variants={fadeInOutVariant}
-          initial="hidden"
-          animate="visible"
-          transition={{ duration: 0.5, delay: 0.5 }}
-          whileHover={isHoverEnabled ? hoverVariants : undefined}
-        >
-          <h2 className="font-bold">Experience</h2>
-          <p>
-            <strong>Junior Software Developer</strong> @ AppFuxion Consulting
-            <br />
-            Sep 2024 - Dec 2024 (Contract)
-          </p>
-          <br />
-          <p>
-            <strong>Software Engineer Intern</strong> @ Fuxionex Group <br />
-            Aug 2023 - Jan 2024
-          </p>
-        </motion.div>
-
-        {/* Testimonials */}
-        <motion.div
-          className="col-span-2 row-span-6 bg-red-300/70 shadow-md backdrop-blur-md sm:col-span-3 lg:col-span-3"
-          variants={fadeInOutVariant}
-          initial="hidden"
-          animate="visible"
-          transition={{ duration: 0.5, delay: 0.6 }}
-          whileHover={isHoverEnabled ? hoverVariants : undefined}
-        >
-          <span className="flex h-full w-full select-none flex-col items-center justify-center text-[4rem] sm:text-[6rem] lg:text-[8rem]">
-            🧑‍💻
-          </span>
-        </motion.div>
-
-        {/* Blog */}
-        <motion.div
-          className="col-span-2 row-span-6 flex flex-col justify-between bg-yellow-300/70 shadow-md backdrop-blur-md sm:col-span-6 lg:col-span-6"
-          variants={fadeInOutVariant}
-          initial="hidden"
-          animate="visible"
-          transition={{ duration: 0.5, delay: 0.7 }}
-          whileHover={isHoverEnabled ? hoverVariants : undefined}
-        >
-          <h2 className="font-bold">Blog</h2>
-          <div className="flex flex-col gap-3 text-sm sm:text-base">
-            {recentPosts.length > 0 ? (
-              recentPosts.map((post) => (
-                <Link
-                  key={post.slug}
-                  href={`/blogs/${post.slug}`}
-                  className="hover-transition-primary"
-                >
-                  <div>
-                    <strong>{post.title}</strong>
-                    <br />
-                    <span className="text-xs opacity-70">
-                      {new Date(post.date).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
+          <CardLabel>Skills</CardLabel>
+          {SKILLS.map((section) => (
+            <div key={section.group} className="mb-5 last:mb-0">
+              <p className="mb-3 text-[15px] font-bold text-base-content">
+                {section.group}
+              </p>
+              <div className="flex flex-col gap-2">
+                {section.items.map((item) => (
+                  <p
+                    key={item}
+                    className="flex items-center gap-3 text-[15px] text-base-content/80"
+                  >
+                    <span className="text-base leading-none text-primary">
+                      •
                     </span>
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <p className="text-sm opacity-70">No recent posts available</p>
-            )}
-          </div>
-          <Link href="/blogs" target="_self">
-            <div className="tooltip" data-tip="More Blog Contents">
-              <h2 className="font-bold transition-transform duration-300 ease-in-out hover:translate-x-2">
-                →
-              </h2>
+                    {item}
+                  </p>
+                ))}
+              </div>
             </div>
-          </Link>
+          ))}
+        </motion.div>
+
+        {/* Let's connect */}
+        <motion.div
+          className="rounded-2xl border border-base-300 bg-base-100 p-6 transition-colors hover:border-base-content/20"
+          variants={fadeInOutVariant}
+          initial="hidden"
+          animate="visible"
+          transition={{ duration: 0.5, delay: 0.2 }}
+          whileHover={isHoverEnabled ? cardHoverVariant : undefined}
+        >
+          <CardLabel>Let&apos;s connect</CardLabel>
+          {CONTACTS.map((contact) => {
+            const Icon = contact.Icon;
+            return (
+              <Link
+                key={contact.label}
+                href={contact.href}
+                {...(contact.external
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
+                className="-mx-1.5 flex items-center gap-3.5 rounded-lg px-1.5 py-2.5 transition-colors hover:bg-base-200"
+              >
+                <span className="flex h-[34px] w-[34px] items-center justify-center rounded-lg border border-base-300 text-primary">
+                  <Icon className="text-[17px]" />
+                </span>
+                <span className="text-sm font-semibold text-base-content">
+                  {contact.label}
+                </span>
+              </Link>
+            );
+          })}
         </motion.div>
       </div>
-    </>
+
+      {/* Projects */}
+      <div
+        id="projects"
+        className="mb-5 mt-14 flex scroll-mt-20 items-end justify-between gap-4"
+      >
+        <h2 className="text-3xl font-extrabold tracking-tight text-base-content">
+          Projects
+        </h2>
+        <ViewAllLink href="/projects">View all →</ViewAllLink>
+      </div>
+      <div className="grid grid-cols-1 gap-[18px] sm:grid-cols-2 lg:grid-cols-3">
+        {projects.map((project, i) => (
+          <ProjectCard key={project.title} project={project} index={i} />
+        ))}
+      </div>
+
+      {/* Blog */}
+      <div
+        id="blog"
+        className="mb-5 mt-14 flex scroll-mt-20 items-end justify-between gap-4"
+      >
+        <h2 className="text-3xl font-extrabold tracking-tight text-base-content">
+          Blog
+        </h2>
+        <ViewAllLink href="/blogs">View all →</ViewAllLink>
+      </div>
+
+      {featured ? (
+        <>
+          <FeaturedPost post={featured} isHoverEnabled={isHoverEnabled} />
+          {rest.length > 0 && (
+            <div className="mt-[18px] grid grid-cols-1 gap-[18px] sm:grid-cols-2 lg:grid-cols-3">
+              {rest.map((post, i) => (
+                <BlogCard
+                  key={post.slug}
+                  post={post}
+                  cover={post.cover}
+                  index={i}
+                />
+              ))}
+            </div>
+          )}
+        </>
+      ) : (
+        <p className="text-sm text-base-content/60">
+          No posts yet. Check back soon!
+        </p>
+      )}
+    </main>
+  );
+}
+
+function FeaturedPost({
+  post,
+  isHoverEnabled,
+}: {
+  post: RecentPost;
+  isHoverEnabled: boolean;
+}) {
+  return (
+    <Link href={`/blogs/${post.slug}`} className="group block">
+      <motion.div
+        className="flex flex-wrap overflow-hidden rounded-2xl border border-base-300 bg-base-100 transition-colors hover:border-base-content/20"
+        variants={fadeInOutVariant}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.5, delay: 0 }}
+        whileHover={isHoverEnabled ? cardHoverVariant : undefined}
+      >
+        <div className="min-h-[182px] flex-[1_1_180px] overflow-hidden">
+          {post.cover ? (
+            // eslint-disable-next-line @next/next/no-img-element -- static export, images.unoptimized
+            <img
+              src={post.cover}
+              alt={`${post.title} cover`}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full min-h-[182px] w-full items-center justify-center bg-gradient-to-br from-primary/15 to-primary/5 text-3xl font-extrabold text-primary">
+              Blog.
+            </div>
+          )}
+        </div>
+        <div className="min-w-[240px] flex-[3_1_260px] p-6">
+          <p className="mb-2.5 text-xs font-bold uppercase tracking-[0.16em] text-primary">
+            Latest Post ·{" "}
+            {new Date(post.date).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}
+          </p>
+          <h3 className="mb-2 text-2xl font-bold leading-snug text-base-content">
+            {post.title}
+          </h3>
+          <p className="mb-4 leading-relaxed text-base-content/60">
+            {post.description}
+          </p>
+          <div className="mb-4 flex flex-wrap gap-2">
+            {post.tags.map((tag) => (
+              <TagPill key={tag}>{tag}</TagPill>
+            ))}
+          </div>
+          <span className="inline-block text-sm font-normal text-primary transition-all duration-300 ease-in-out group-hover:translate-x-2 group-hover:text-secondary">
+            Read post →
+          </span>
+        </div>
+      </motion.div>
+    </Link>
   );
 }

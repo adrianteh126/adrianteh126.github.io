@@ -12,10 +12,13 @@ const PostMetaSchema = z.object({
   date: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, "date must be ISO YYYY-MM-DD")
-    .refine((d) => !Number.isNaN(Date.parse(d)), "date is not a valid calendar date"),
+    .refine(
+      (d) => !Number.isNaN(Date.parse(d)),
+      "date is not a valid calendar date",
+    ),
   description: z.string().min(1),
   tags: z.array(z.string().min(1)).min(1),
-  author: z.string().min(1)
+  author: z.string().min(1),
 });
 
 export type PostMeta = z.infer<typeof PostMetaSchema>;

@@ -1,3 +1,5 @@
+import { TagPill } from "@/components/site/TagPill";
+
 interface BlogPostHeaderProps {
   title?: string;
   date?: string;
@@ -42,9 +44,7 @@ export function BlogPostHeader(props: BlogPostHeaderProps) {
       )}
       <div className="mt-4 flex flex-wrap gap-2">
         {tags.map((t) => (
-          <span key={t} className="badge badge-primary badge-sm uppercase">
-            {t}
-          </span>
+          <TagPill key={t}>{t}</TagPill>
         ))}
       </div>
     </div>

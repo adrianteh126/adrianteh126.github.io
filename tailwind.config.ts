@@ -11,10 +11,6 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-      },
       fontSize: {
         base: ["clamp(14px, 2.5vw, 16px)", { lineHeight: "1.6" }],
         lg: ["clamp(16px, 3vw, 18px)", { lineHeight: "1.6" }],

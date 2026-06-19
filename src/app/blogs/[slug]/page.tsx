@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getAllPosts, getPostBySlug } from "@/lib/blogs";
 import { BlogPostHeader } from "@/components/blogs/BlogPostHeader";
+import { getCoverSrc } from "@/app/blogs/covers";
 
 // Static export: only pre-rendered slugs are valid; unknown slugs 404.
 export const dynamicParams = false;
@@ -35,6 +36,8 @@ export default async function BlogPostPage({
 
   // Cover image is per-post and optional — posts without a cover still build.
   // Drop a `cover.<ext>` in the post folder; the first matching extension wins.
+  // Resolution is shared (see covers.ts) so the list, post, and home pages stay
+  // in sync.
   //
   // Image spec: static export does NOT optimise images (images.unoptimized +
   // output: "export"), so the file ships as-is — size it before committing:
@@ -49,24 +52,15 @@ export default async function BlogPostPage({
   //             With macOS sips (crop to ratio, then scale — assumes source is wide enough):
   //               `sips -c $((W*2/5)) W in.png --out _t.png   # -c is H W; center-crops to 2.5:1`
   //               `sips -s format jpeg -s formatOptions 82 -z 640 1600 _t.png --out cover.jpg && rm _t.png`
-  const COVER_EXTENSIONS = ["jpg", "jpeg", "png", "webp", "avif", "gif"];
-  let cover: { src: string } | null = null;
-  for (const ext of COVER_EXTENSIONS) {
-    try {
-      cover = (await import(`../${slug}/cover.${ext}`)).default;
-      break;
-    } catch {
-      // extension not present — try the next one
-    }
-  }
+  const cover = await getCoverSrc(slug);
 
   return (
     <article>
       {cover && (
         <img
-          src={cover.src}
+          src={cover}
           alt={`${post.title} cover`}
-          className="my-8 w-full rounded-sm"
+          className="my-8 w-full rounded-lg"
         />
       )}
       <BlogPostHeader metadata={post} />
