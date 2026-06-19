@@ -1,0 +1,90 @@
+---
+title: "Making The Blog SEO-Ready"
+date: "2026-06-19"
+description: "I built the blog — then realised nobody could find it. Here's how I made a static GitHub Pages site discoverable and share-ready."
+tags:
+  - seo
+  - nextjs
+  - github-pages
+  - static-export
+author: "Adrian Teh"
+---
+
+# Nobody Could Find It 🔍
+
+A while back I [shipped this blog](/blogs/introducing-the-blog-system).
+Clean stack, static export, auto-deploy. I was happy with it.
+
+Then I shared a link — and it showed up as a naked grey rectangle.
+No title. No image. No preview.
+
+I searched my own name on Google. Nothing.
+
+The blog existed. But to the rest of the internet, it basically didn't.
+
+## What Was Actually Missing
+
+Turns out "it builds and deploys" is not the same as "people can find it."
+
+I had none of the boring-but-essential stuff:
+
+- No Open Graph tags — so every shared link looked broken
+- No `sitemap.xml` or `robots.txt` — crawlers had to guess
+- No structured data — Google couldn't tell a blog post from a contact page
+- No RSS — no way to subscribe
+- No analytics — I had zero idea if anyone visited
+
+So I sat down and fixed all of it.
+
+## What I Added 🛠️
+
+- **metadataBase + Open Graph + Twitter cards** — links now unfurl with title, description, and an image
+- **A real OG image** — generated at build time, 1200×630, branded
+- **`sitemap.xml` + `robots.txt`** — auto-generated, every post included
+- **JSON-LD structured data** — `Person` on the home page, `BlogPosting` + breadcrumbs on each post
+- **An RSS feed** — `/feed.xml`, the thing I said I'd add in the last post
+- **Search Console + privacy-friendly analytics** — so I can actually see what's working
+
+The nice part: every new post now gets all of this for free.
+I just write the Markdown.
+
+## Static Export Surprised Me
+
+I assumed SEO on Next.js would be a solved, one-import affair.
+On a static GitHub Pages export, it isn't — and that caught me off guard.
+
+A few things I didn't expect:
+
+- No image optimization — what you commit is what ships, so I size images by hand
+- Routes like the sitemap and RSS feed need to be explicitly marked static, or the build refuses
+- No on-the-fly OG image generation — I bake one image at build instead of generating per request
+
+None of it was hard. It just wasn't the path I expected, and I learned more about how
+the framework actually works because of it.
+
+## One Constant To Rule Them All
+
+The thing I'm quietly proud of: every URL in the project comes from a single constant.
+
+The site's address lives in one place. From it, everything derives — the canonical links,
+the social image URLs, the sitemap, the RSS feed, the structured data.
+
+Which means the day I move to a custom domain, it's a **one-line change**.
+No hunting through files. No half-updated links. One line, rebuild, done.
+
+That kind of thing doesn't show up on the page — but it's the part I enjoyed most.
+
+## A Few Bumps
+
+It wasn't all smooth. There's a whole category of config that fails silently —
+a value in the wrong place, a token pasted with one character too many, a status that
+says "error" when it really just means "not yet." A bit fiddly. Nothing dramatic.
+Mostly a reminder that the last 10% of "make it discoverable" is patience, not code.
+
+## Worth It
+
+Now a shared link looks like something. The site is in Google's queue.
+I can see real visits roll in.
+
+It's the kind of work nobody notices when it's done right — which is exactly why
+it felt good to finally do it properly.
